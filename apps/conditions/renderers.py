@@ -31,8 +31,9 @@ class XMLRenderer(BaseRenderer):
 
     def _condition(self, xml, condition):
         xml.startElement('Condition', {})
-        self._text_element(xml, 'title', {}, condition["title"])
-        self._text_element(xml, 'description', {}, condition["description"])
+        self._text_element(xml, 'identifier', {}, condition["identifier"])
+        self._text_element(xml, 'uri', {}, condition["uri"])
+        self._text_element(xml, 'comment', {}, condition["comment"])
         self._text_element(xml, 'source', {}, condition["source"])
         self._text_element(xml, 'relation', {}, condition["relation"])
         self._text_element(xml, 'target_text', {}, condition["target_text"])
