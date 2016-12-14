@@ -9,7 +9,7 @@ class OptionSetIndexOptionsSerializer(serializers.ModelSerializer):
         model = Option
         fields = (
             'id',
-            'title',
+            'identifier',
             'text'
         )
 
@@ -22,7 +22,7 @@ class OptionSetIndexSerializer(serializers.ModelSerializer):
         model = OptionSet
         fields = (
             'id',
-            'title',
+            'identifier',
             'options'
         )
 
@@ -33,7 +33,9 @@ class OptionSetSerializer(serializers.ModelSerializer):
         model = OptionSet
         fields = (
             'id',
-            'title',
+            'identifier',
+            'uri',
+            'comment',
             'order',
             'conditions'
         )
@@ -46,7 +48,9 @@ class OptionSerializer(serializers.ModelSerializer):
         fields = (
             'id',
             'optionset',
-            'title',
+            'identifier',
+            'uri',
+            'comment',
             'order',
             'text_en',
             'text_de',
