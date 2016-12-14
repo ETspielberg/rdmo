@@ -30,24 +30,49 @@ class Condition(models.Model):
         (RELATION_NOT_EMPTY, 'is not empty'),
     )
 
-    title = models.CharField(max_length=256, validators=[
-        RegexValidator('^[a-zA-z0-9_]*$', _('Only letters, numbers, or underscores are allowed.'))
-    ])
-    description = models.TextField(blank=True, null=True)
-
-    source = models.ForeignKey('domain.Attribute', db_constraint=False, blank=True, null=True, on_delete=models.SET_NULL, related_name='+')
-    relation = models.CharField(max_length=8, choices=RELATION_CHOICES)
-
-    target_text = models.CharField(max_length=256, blank=True, null=True)
-    target_option = models.ForeignKey('options.Option', db_constraint=False, blank=True, null=True, on_delete=models.SET_NULL, related_name='+')
+    identifier = models.SlugField(
+        max_length=256, unique=True,
+        verbose_name=_('Identifier'),
+        help_text=_('The unambiguous internal identifier of this condition.')
+    )
+    uri = models.URLField(
+        max_length=256, blank=True, null=True,
+        verbose_name=_('URI'),
+        help_text=_('The Uniform Resource Identifier of this condition.')
+    )
+    comment = models.TextField(
+        blank=True, null=True,
+        verbose_name=_('Comment'),
+        help_text=_('Additional information about this condition.')
+    )
+    source = models.ForeignKey(
+        'domain.Attribute', db_constraint=False, blank=True, null=True, on_delete=models.SET_NULL, related_name='+',
+        verbose_name=_('Source'),
+        help_text=_('Attribute this condition is evaluating.')
+    )
+    relation = models.CharField(
+        max_length=8, choices=RELATION_CHOICES,
+        verbose_name=_('Relation'),
+        help_text=_('Relation this condition is using.')
+    )
+    target_text = models.CharField(
+        max_length=256, blank=True, null=True,
+        verbose_name=_('Target (Text)'),
+        help_text=_('Raw text value this condition is checking against.')
+    )
+    target_option = models.ForeignKey(
+        'options.Option', db_constraint=False, blank=True, null=True, on_delete=models.SET_NULL, related_name='+',
+        verbose_name=_('Target (Option)'),
+        help_text=_('Option this condition is checking against.')
+    )
 
     class Meta:
-        ordering = ('title', )
+        ordering = ('identifier', )
         verbose_name = _('Condition')
         verbose_name_plural = _('Conditions')
 
     def __str__(self):
-        return self.title
+        return self.identifier
 
     @property
     def source_label(self):

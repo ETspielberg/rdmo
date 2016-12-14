@@ -12,8 +12,8 @@ class ConditionIndexSerializer(serializers.ModelSerializer):
         model = Condition
         fields = (
             'id',
-            'title',
-            'description',
+            'identifier',
+            'comment',
             'source_label',
             'relation_label',
             'target_label'
@@ -26,8 +26,9 @@ class ConditionSerializer(serializers.ModelSerializer):
         model = Condition
         fields = (
             'id',
-            'title',
-            'description',
+            'identifier',
+            'uri',
+            'comment',
             'source',
             'relation',
             'target_text',

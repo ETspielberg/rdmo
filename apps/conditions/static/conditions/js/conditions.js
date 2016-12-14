@@ -113,7 +113,12 @@ angular.module('conditions', ['core'])
     service.getOptions = function() {
         if (angular.isDefined(service.values) && angular.isDefined(service.values.source)) {
             attribute = $filter('filter')(service.attributes, {id: service.values.source})[0];
-            return attribute.options;
+
+            if (angular.isDefined(attribute) && angular.isDefined(attribute.options)) {
+                return attribute.options;
+            } else {
+                return null;
+            }
         }
     };
 
