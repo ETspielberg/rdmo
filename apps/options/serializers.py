@@ -73,7 +73,9 @@ class ExportOptionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Option
         fields = (
-            'title',
+            'identifier',
+            'uri',
+            'comment',
             'order',
             'text_en',
             'text_de',
@@ -98,7 +100,9 @@ class ExportSerializer(serializers.ModelSerializer):
     class Meta:
         model = OptionSet
         fields = (
-            'title',
+            'identifier',
+            'uri',
+            'comment',
             'order',
             'options',
             'conditions'
