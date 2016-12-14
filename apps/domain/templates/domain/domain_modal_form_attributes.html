@@ -24,18 +24,11 @@
                         data-options-null="1">
                     </formgroup>
                     <formgroup
-                        data-id="title"
+                        data-id="identifier"
                         data-type="text"
-                        data-label="{% trans 'Title' %}"
-                        data-model="service.values.title"
-                        data-errors="service.errors.title">
-                    </formgroup>
-                    <formgroup
-                        data-id="description"
-                        data-type="textarea"
-                        data-label="{% trans 'Description' %}"
-                        data-model="service.values.description"
-                        data-errors="service.errors.description">
+                        data-label="{% trans 'Identifier' %}"
+                        data-model="service.values.identifier"
+                        data-errors="service.errors.identifier">
                     </formgroup>
                     <formgroup
                         data-id="uri"
@@ -43,6 +36,13 @@
                         data-label="{% trans 'URI' %}"
                         data-model="service.values.uri"
                         data-errors="service.errors.uri">
+                    </formgroup>
+                    <formgroup
+                        data-id="comment"
+                        data-type="textarea"
+                        data-label="{% trans 'Comment' %}"
+                        data-model="service.values.comment"
+                        data-errors="service.errors.comment">
                     </formgroup>
                     <formgroup
                         data-id="is_collection"
