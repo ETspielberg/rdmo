@@ -91,8 +91,9 @@ class ExportSerializer(serializers.ModelSerializer):
     class Meta:
         model = Condition
         fields = (
-            'title',
-            'description',
+            'identifier',
+            'uri',
+            'comment',
             'source',
             'relation',
             'target_text',
