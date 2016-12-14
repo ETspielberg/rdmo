@@ -13,22 +13,41 @@
                 </div>
 
                 <div class="modal-body">
-                     <formgroup
+
+                    <ul class="text-danger list-unstyled" ng-show="service.errors.non_field_errors">
+                        <li ng-repeat="error in service.errors.non_field_errors">{$ error $}</li>
+                    </ul>
+
+                    <formgroup
                         data-id="optionset"
                         data-type="selectnumber"
                         data-label="{% trans 'Option set' %}"
                         data-model="service.values.optionset"
                         data-errors="service.errors.optionset"
                         data-options="service.optionsets"
-                        data-options-label="title"
+                        data-options-label="identifier"
                         data-options-null="1">
                     </formgroup>
                     <formgroup
-                        data-id="title"
+                        data-id="identifier"
                         data-type="text"
-                        data-label="{% trans 'Title' %}"
-                        data-model="service.values.title"
-                        data-errors="service.errors.title">
+                        data-label="{% trans 'Identifier' %}"
+                        data-model="service.values.identifier"
+                        data-errors="service.errors.identifier">
+                    </formgroup>
+                    <formgroup
+                        data-id="uri"
+                        data-type="text"
+                        data-label="{% trans 'URI' %}"
+                        data-model="service.values.uri"
+                        data-errors="service.errors.uri">
+                    </formgroup>
+                    <formgroup
+                        data-id="comment"
+                        data-type="textarea"
+                        data-label="{% trans 'Comment' %}"
+                        data-model="service.values.comment"
+                        data-errors="service.errors.comment">
                     </formgroup>
                     <formgroup
                         data-id="order"

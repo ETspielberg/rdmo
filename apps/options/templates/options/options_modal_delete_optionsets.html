@@ -14,7 +14,7 @@
 
                 <div class="modal-body">
                     <p>
-                        {% blocktrans trimmed with object='{$ service.values.title $}' %}
+                        {% blocktrans trimmed with object='{$ service.values.identifier $}' %}
                         You are about to permanently delete the option set <strong>{{ object }}</strong>.
                         {% endblocktrans %}
                     </p>
@@ -28,7 +28,7 @@
                     <ul class="list-unstyled">
                         <li ng-repeat="option in service.values.options">
                             <strong>{% trans 'Option' %}</strong>
-                            <code>{$ option.title $}</code>
+                            <code>{$ option.identifier $}</code>
                             <span>{$ option.text $}</span>
                         </li>
                     </ul>

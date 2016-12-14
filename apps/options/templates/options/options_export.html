@@ -7,10 +7,10 @@
 
     {% for optionset in optionsets %}
 
-    <h2>{{ optionset.title }}</h2>
+    <h2>{{ optionset.identifier }}</h2>
 
     <p>
-        <strong>{% trans 'Title' %}</strong> {{ optionset.title }}
+        <strong>{% trans 'Title' %}</strong> {{ optionset.identifier }}
     </p>
 
     {% endfor %}
