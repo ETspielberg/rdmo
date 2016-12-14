@@ -31,7 +31,9 @@ class XMLRenderer(BaseRenderer):
 
     def _option(self, xml, option):
         xml.startElement('Option', {})
-        self._text_element(xml, 'title', {}, option["title"])
+        self._text_element(xml, 'identifier', {}, option["identifier"])
+        self._text_element(xml, 'uri', {}, option["uri"])
+        self._text_element(xml, 'comment', {}, option["comment"])
         self._text_element(xml, 'order', {}, option["order"])
         self._text_element(xml, 'text_en', {}, option["text_en"])
         self._text_element(xml, 'text_de', {}, option["text_de"])
@@ -40,7 +42,9 @@ class XMLRenderer(BaseRenderer):
 
     def _optionset(self, xml, optionset):
         xml.startElement('OptionSet', {})
-        self._text_element(xml, 'title', {}, optionset["title"])
+        self._text_element(xml, 'identifier', {}, optionset["identifier"])
+        self._text_element(xml, 'uri', {}, optionset["uri"])
+        self._text_element(xml, 'comment', {}, optionset["comment"])
         self._text_element(xml, 'order', {}, optionset["order"])
 
         if 'options' in optionset and optionset['options']:
@@ -63,7 +67,7 @@ class XMLRenderer(BaseRenderer):
 
     def _condition(self, xml, condition):
         xml.startElement('Condition', {})
-        self._text_element(xml, 'title', {}, condition["title"])
+        self._text_element(xml, 'identifier', {}, condition["identifier"])
         xml.endElement('Condition')
 
     def _text_element(self, xml, tag, option, text):
