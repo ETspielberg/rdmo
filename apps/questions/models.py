@@ -181,8 +181,8 @@ def post_save_question_entity(sender, **kwargs):
     instance = kwargs['instance']
 
     if instance.attribute_entity:
-        instance.label_en = instance.subsection.label_en + ' / ' + instance.attribute_entity.title
-        instance.label_de = instance.subsection.label_de + ' / ' + instance.attribute_entity.title
+        instance.label_en = instance.subsection.label_en + ' / ' + instance.attribute_entity.label
+        instance.label_de = instance.subsection.label_de + ' / ' + instance.attribute_entity.label
     else:
         instance.label_en = instance.subsection.label_en + ' / --'
         instance.label_de = instance.subsection.label_de + ' / --'

@@ -34,7 +34,7 @@ class OptionSet(models.Model):
     conditions = models.ManyToManyField(
         Condition, blank=True,
         verbose_name=_('Conditions'),
-        help_text=_(' The list of conditions evaluated for this option set.')
+        help_text=_('The list of conditions evaluated for this option set.')
     )
 
     class Meta:

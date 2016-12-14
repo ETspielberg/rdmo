@@ -2,7 +2,6 @@ from __future__ import unicode_literals
 
 from django.db import models
 from django.db.models.signals import post_save
-from django.core.validators import RegexValidator
 from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext_lazy as _
 
@@ -15,30 +14,59 @@ from apps.conditions.models import Condition
 @python_2_unicode_compatible
 class AttributeEntity(MPTTModel):
 
-    parent = TreeForeignKey('self', null=True, blank=True, related_name='children', db_index=True, help_text='optional')
-
-    title = models.CharField(max_length=256, validators=[
-        RegexValidator('^[a-zA-z0-9_]*$', _('Only letters, numbers, or underscores are allowed.'))
-    ])
-    label = models.CharField(max_length=512, db_index=True)
-
-    description = models.TextField(blank=True, null=True)
-    uri = models.URLField(blank=True, null=True)
-
-    is_collection = models.BooleanField(default=False)
-    is_attribute = models.BooleanField(default=False)
-
-    parent_collection = models.ForeignKey('AttributeEntity', blank=True, null=True, default=None, related_name='+', db_index=True)
-
-    conditions = models.ManyToManyField(Condition, blank=True)
+    parent = TreeForeignKey(
+        'self', null=True, blank=True, related_name='children', db_index=True,
+        verbose_name=_('Parent entity'),
+        help_text=_('Parent entity in the domain model.')
+    )
+    identifier = models.SlugField(
+        max_length=256,
+        verbose_name=_('Identifier'),
+        help_text=_('Unambiguous internal identifier of this attribute/entity.')
+    )
+    uri = models.URLField(
+        max_length=256, blank=True, null=True,
+        verbose_name=_('URI'),
+        help_text=_('Uniform Resource Identifier of this attribute/entity.')
+    )
+    comment = models.TextField(
+        blank=True, null=True,
+        verbose_name=_('Comment'),
+        help_text=_('Additional information about this attribute/entity.')
+    )
+    label = models.CharField(
+        max_length=512, db_index=True,
+        verbose_name=_('Label'),
+        help_text=_('Full identifier of this attribute/entity (auto-generated).')
+    )
+    is_collection = models.BooleanField(
+        default=False,
+        verbose_name=_('is collection'),
+        help_text=_('Designates whether this attribute/entity is a collection.')
+    )
+    is_attribute = models.BooleanField(
+        default=False,
+        verbose_name=_('is attribute'),
+        help_text=_('Designates whether this attribute/entity is an attribute (auto-generated).')
+    )
+    parent_collection = models.ForeignKey(
+        'AttributeEntity', blank=True, null=True, default=None, related_name='+', db_index=True,
+        verbose_name=_('Parent collection'),
+        help_text=_('Next collection entity upwards in the domain model (auto-generated).')
+    )
+    conditions = models.ManyToManyField(
+        Condition, blank=True,
+        verbose_name=_('Conditions'),
+        help_text=_('List of conditions evaluated for this attribute/entity.')
+    )
 
     class Meta:
         ordering = ('label', )
-        verbose_name = _('AttributeEntity')
-        verbose_name_plural = _('AttributeEntities')
+        verbose_name = _('Attribute entity')
+        verbose_name_plural = _('Attribute entities')
 
     class MPTTMeta:
-        order_insertion_by = ['title']
+        order_insertion_by = ['identifier']
 
     def __str__(self):
         return self.label
@@ -82,10 +110,22 @@ class Attribute(AttributeEntity):
         (VALUE_TYPE_OPTIONS, _('Options'))
     )
 
-    value_type = models.CharField(max_length=8, choices=VALUE_TYPE_CHOICES)
-    unit = models.CharField(max_length=64, blank=True, null=True)
+    value_type = models.CharField(
+        max_length=8, choices=VALUE_TYPE_CHOICES,
+        verbose_name=_('Value type'),
+        help_text=_('Type of values for this attribute.')
+    )
+    unit = models.CharField(
+        max_length=64, blank=True, null=True,
+        verbose_name=_('Unit'),
+        help_text=_('Unit of values for this attribute.')
+    )
 
-    optionsets = models.ManyToManyField('options.OptionSet', blank=True)
+    optionsets = models.ManyToManyField(
+        'options.OptionSet', blank=True,
+        verbose_name=_('Option sets'),
+        help_text=_('Option sets for this attribute.')
+    )
 
     class Meta:
         verbose_name = _('Attribute')
@@ -109,7 +149,7 @@ def post_save_attribute_entity(sender, **kwargs):
         instance = kwargs['instance']
 
         # init fields
-        instance.label = instance.title
+        instance.label = instance.identifier
         instance.is_attribute = hasattr(instance, 'attribute')
         instance.parent_collection = None
 
@@ -125,7 +165,7 @@ def post_save_attribute_entity(sender, **kwargs):
                 instance.parent_collection = parent
 
             # update own full name
-            instance.label = parent.title + '.' + instance.label
+            instance.label = parent.identifier + '.' + instance.label
 
             parent = parent.parent
 
@@ -146,17 +186,35 @@ post_save.connect(post_save_attribute_entity, sender=Attribute)
 @python_2_unicode_compatible
 class VerboseName(models.Model, TranslationMixin):
 
-    attribute_entity = models.OneToOneField('AttributeEntity')
-
-    name_en = models.CharField(max_length=256)
-    name_de = models.CharField(max_length=256)
-
-    name_plural_en = models.CharField(max_length=256)
-    name_plural_de = models.CharField(max_length=256)
+    attribute_entity = models.OneToOneField(
+        'AttributeEntity',
+        verbose_name=_('Attribute entity'),
+        help_text=_('Attribute/entity this verbose name belongs to.')
+    )
+    name_en = models.CharField(
+        max_length=256,
+        verbose_name=_('Name (en)'),
+        help_text=_('English name displayed for this attribute/entity (e.g. project).')
+    )
+    name_de = models.CharField(
+        max_length=256,
+        verbose_name=_('Name (de)'),
+        help_text=_('German name displayed for this attribute/entity (e.g. Projekt).')
+    )
+    name_plural_en = models.CharField(
+        max_length=256,
+        verbose_name=_('Plural name (en)'),
+        help_text=_('English plural name displayed for this attribute/entity (e.g. projects).')
+    )
+    name_plural_de = models.CharField(
+        max_length=256,
+        verbose_name=_('Plural name (de)'),
+        help_text=_('German plural name displayed for this attribute/entity (e.g. Projekte).')
+    )
 
     class Meta:
-        verbose_name = _('VerboseName')
-        verbose_name_plural = _('VerboseNames')
+        verbose_name = _('Verbose name')
+        verbose_name_plural = _('Verbose names')
 
     def __str__(self):
         return self.attribute_entity.label
@@ -173,11 +231,23 @@ class VerboseName(models.Model, TranslationMixin):
 @python_2_unicode_compatible
 class Range(models.Model, TranslationMixin):
 
-    attribute = models.OneToOneField('Attribute')
-
-    minimum = models.FloatField()
-    maximum = models.FloatField()
-    step = models.FloatField()
+    attribute = models.OneToOneField(
+        'Attribute',
+        verbose_name=_('Attribute'),
+        help_text=_('Attribute this verbose name belongs to.')
+    )
+    minimum = models.FloatField(
+        verbose_name=_('Minimum'),
+        help_text=_('Minimal value for this attribute.')
+    )
+    maximum = models.FloatField(
+        verbose_name=_('Maximum'),
+        help_text=_('Maximum value for this attribute.')
+    )
+    step = models.FloatField(
+        verbose_name=_('Step'),
+        help_text=_('Step in which this attribute can be incremented/decremented.')
+    )
 
     class Meta:
         ordering = ('attribute', )

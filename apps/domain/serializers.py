@@ -14,7 +14,9 @@ class AttributeEntityNestedSerializer(serializers.ModelSerializer):
         model = AttributeEntity
         fields = (
             'id',
-            'title',
+            'identifier',
+            'uri',
+            'comment',
             'label',
             'is_collection',
             'is_attribute',
@@ -43,9 +45,9 @@ class AttributeEntitySerializer(serializers.ModelSerializer):
         fields = (
             'id',
             'parent',
-            'title',
-            'description',
+            'identifier',
             'uri',
+            'comment',
             'is_collection',
             'conditions'
         )
@@ -68,9 +70,9 @@ class AttributeSerializer(AttributeEntitySerializer):
         fields = (
             'id',
             'parent',
-            'title',
-            'description',
+            'identifier',
             'uri',
+            'comment',
             'value_type',
             'unit',
             'is_collection',
@@ -122,7 +124,7 @@ class ConditionSerializer(serializers.ModelSerializer):
         model = Condition
         fields = (
             'id',
-            'title',
+            'identifier',
         )
 
 
@@ -177,16 +179,15 @@ class ExportSerializer(serializers.ModelSerializer):
         model = AttributeEntity
         fields = (
             'id',
-            'title',
-            'description',
+            'identifier',
             'uri',
+            'comment',
             'is_collection',
             'is_attribute',
             'value_type',
             'unit',
             'is_collection',
             'conditions',
-            # 'options',
             'range',
             'verbosename',
             'conditions',
