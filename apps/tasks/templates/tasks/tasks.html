@@ -88,12 +88,13 @@
                     </div>
 
                 </div>
-                <strong>{% trans 'Task' %}</strong> {$ task.title $}
+                <strong>{% trans 'Task' %}</strong>
+                <code>{$ task.identifier $}</code>
             </div>
 
             <ul class="list-group">
                 <li class="list-group-item">
-                    <span>{$ task.text $}</span>
+                    <span>{$ task.comment $}</span>
                 </li>
             </ul>
         </div>
