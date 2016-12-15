@@ -47,7 +47,7 @@ def project(request, pk):
     return render(request, 'projects/project.html', {
         'project': project,
         'tasks': tasks,
-        'views': View.objects.all(),
+        'views': View.objects.order_by('identifier'),
         'snapshots': project.snapshots.all()
     })
 

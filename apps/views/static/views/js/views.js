@@ -17,6 +17,7 @@ angular.module('views', ['core'])
     var factories = {
         views: function(parent) {
             return {
+                'template': ''
             };
         }
     };
@@ -62,8 +63,6 @@ angular.module('views', ['core'])
 
         $q.when(service.values.$promise).then(function() {
             $('#' + resource + '-form-modal').modal('show');
-
-            angular.element('.CodeMirror')[0].CodeMirror.refresh();
         });
     };
 
