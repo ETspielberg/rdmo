@@ -12,8 +12,8 @@ class TaskIndexSerializer(serializers.ModelSerializer):
         model = Task
         fields = (
             'id',
-            'title',
-            'text'
+            'identifier',
+            'comment'
         )
 
 
@@ -24,6 +24,9 @@ class TaskSerializer(serializers.ModelSerializer):
         fields = (
             'id',
             '__str__',
+            'identifier',
+            'uri',
+            'comment',
             'attribute',
             'time_period',
             'title_en',
@@ -51,5 +54,5 @@ class ConditionSerializer(serializers.ModelSerializer):
         model = Condition
         fields = (
             'id',
-            'title'
+            'identifier'
         )
