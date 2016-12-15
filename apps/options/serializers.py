@@ -64,7 +64,7 @@ class ConditionSerializer(serializers.ModelSerializer):
         model = Condition
         fields = (
             'id',
-            'title'
+            'identifier'
         )
 
 
@@ -88,7 +88,7 @@ class ExportConditionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Condition
         fields = (
-            'title',
+            'identifier',
         )
 
 
