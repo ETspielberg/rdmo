@@ -151,15 +151,21 @@ class ExportRangeSerializer(serializers.ModelSerializer):
         )
 
 
+class ExportOptionSetSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = OptionSet
+        fields = (
+            'identifier',
+        )
+
+
 class ExportConditionSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Condition
         fields = (
-            'source',
-            'relation',
-            'target_text',
-            'target_option'
+            'identifier',
         )
 
 
@@ -168,11 +174,11 @@ class ExportSerializer(serializers.ModelSerializer):
     value_type = serializers.CharField(source='attribute.value_type', read_only=True)
     unit = serializers.CharField(source='attribute.unit', read_only=True)
 
-    # options = ExportOptionSerializer(source='attribute.options', many=True, read_only=True)
     range = ExportRangeSerializer(source='attribute.range', read_only=True)
     verbosename = ExportVerboseNameSerializer(read_only=True)
-    conditions = ExportConditionSerializer(many=True, read_only=True)
 
+    optionsets = ExportOptionSetSerializer(read_only=True, many=True)
+    conditions = ExportConditionSerializer(read_only=True, many=True)
     children = serializers.SerializerMethodField()
 
     class Meta:
@@ -186,12 +192,11 @@ class ExportSerializer(serializers.ModelSerializer):
             'is_attribute',
             'value_type',
             'unit',
-            'is_collection',
-            'conditions',
             'range',
             'verbosename',
+            'optionsets',
             'conditions',
-            'children'
+            'children',
         )
 
     def get_children(self, obj):
