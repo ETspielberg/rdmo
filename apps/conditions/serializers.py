@@ -86,7 +86,7 @@ class OptionSetSerializer(serializers.ModelSerializer):
 
 class ExportSerializer(serializers.ModelSerializer):
 
-    target_option = serializers.CharField(source='target_option.title')
+    target_option = serializers.CharField(source='target_option.identifier')
 
     class Meta:
         model = Condition

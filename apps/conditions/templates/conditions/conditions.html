@@ -80,7 +80,7 @@
                     </a>
                 </div>
                 <strong>{% trans 'Condition' %}</strong>
-                <code>{$ condition.title $}</code>
+                <code>{$ condition.identifier $}</code>
             </div>
 
             <ul class="list-group">
@@ -89,8 +89,8 @@
                     <span>{$ condition.relation_label $}</span>
                     <span ng-show="condition.target_label">"{$ condition.target_label $}"</span>
                 </li>
-                <li class="list-group-item" ng-show="condition.description">
-                    {$ condition.description $}
+                <li class="list-group-item" ng-show="condition.comment">
+                    {$ condition.comment $}
                 </li>
             </ul>
         </div>
