@@ -12,17 +12,19 @@ class ViewIndexSerializer(serializers.ModelSerializer):
         model = View
         fields = (
             'id',
-            'title',
-            'description'
+            'identifier',
+            'comment'
         )
 
 
 class ViewSerializer(serializers.ModelSerializer):
 
     def validate(self, data):
-        # try to render the tamplate to see that the syntax is ok
+        # try to render the template to see that the syntax is ok
         try:
             Template(data['template']).render(Context({}))
+        except KeyError:
+            pass
         except TemplateSyntaxError as e:
             raise exceptions.ValidationError({'template': [e.message]})
 
@@ -32,7 +34,8 @@ class ViewSerializer(serializers.ModelSerializer):
         model = View
         fields = (
             'id',
-            'title',
-            'description',
+            'identifier',
+            'uri',
+            'comment',
             'template'
         )

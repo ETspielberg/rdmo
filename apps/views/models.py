@@ -13,23 +13,39 @@ from apps.conditions.models import Condition
 @python_2_unicode_compatible
 class View(models.Model):
 
-    title = models.CharField(max_length=256)
-    description = models.TextField(blank=True, null=True)
-
-    template = models.TextField(blank=True, null=True)
+    identifier = models.SlugField(
+        max_length=256, unique=True,
+        verbose_name=_('Identifier'),
+        help_text=_('The unambiguous internal identifier of this view.')
+    )
+    uri = models.URLField(
+        max_length=256, blank=True, null=True,
+        verbose_name=_('URI'),
+        help_text=_('The Uniform Resource Identifier of this view.')
+    )
+    comment = models.TextField(
+        blank=True, null=True,
+        verbose_name=_('Comment'),
+        help_text=_('Additional information about this view.')
+    )
+    template = models.TextField(
+        blank=True, null=True,
+        verbose_name=_('Template'),
+        help_text=_('The template for this view, written in Django template language.')
+    )
 
     class Meta:
         verbose_name = _('View')
         verbose_name_plural = _('Views')
 
     def __str__(self):
-        return self.title
+        return self.identifier
 
     def render(self, project, snapshot=None):
         # get list of conditions
         conditions = {}
         for condition in Condition.objects.all():
-            conditions[condition.title] = condition.resolve(project, snapshot)
+            conditions[condition.identifier] = condition.resolve(project, snapshot)
 
         # get the tree of entities
         entity_trees = AttributeEntity.objects.get_cached_trees()
@@ -60,7 +76,7 @@ class View(models.Model):
         # construct attribute/values tree from the input entity_trees using recursion
         values_tree = {}
         for entity_tree in entity_trees:
-            values_tree[entity_tree.title] = self._build_values_tree(entity_tree)
+            values_tree[entity_tree.identifier] = self._build_values_tree(entity_tree)
 
         # render the template to a html string
         return Template(self.template).render(Context({
@@ -106,12 +122,12 @@ class View(models.Model):
                         if node_values:
                             # flatten the list if it is not a collection and append a the node for this attribute
                             if child.is_collection:
-                                node[child.title] = node_values
+                                node[child.identifier] = node_values
                             else:
-                                node[child.title] = node_values[0]
+                                node[child.identifier] = node_values[0]
 
                 else:
                     # for an entity proceed with the recursion
-                    node[child.title] = self._build_values_tree(child, set_index)
+                    node[child.identifier] = self._build_values_tree(child, set_index)
 
             return node
