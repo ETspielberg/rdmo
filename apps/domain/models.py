@@ -20,7 +20,7 @@ class AttributeEntity(MPTTModel):
         help_text=_('Parent entity in the domain model.')
     )
     identifier = models.SlugField(
-        max_length=256,
+        max_length=128,
         verbose_name=_('Identifier'),
         help_text=_('Unambiguous internal identifier of this attribute/entity.')
     )

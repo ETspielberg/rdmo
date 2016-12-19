@@ -12,7 +12,7 @@ from apps.conditions.models import Condition
 class OptionSet(models.Model):
 
     identifier = models.SlugField(
-        max_length=256, unique=True,
+        max_length=128, unique=True,
         verbose_name=_('Identifier'),
         help_text=_('The unambiguous internal identifier of this option set.')
     )
@@ -55,7 +55,7 @@ class Option(models.Model, TranslationMixin):
         help_text=_('The option set this option belongs to.')
     )
     identifier = models.SlugField(
-        max_length=256, db_index=True,
+        max_length=128, db_index=True,
         verbose_name=_('Identifier'),
         help_text=_('The unambiguous internal identifier of this option.')
     )

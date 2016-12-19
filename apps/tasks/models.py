@@ -15,7 +15,7 @@ from apps.conditions.models import Condition
 class Task(TranslationMixin, models.Model):
 
     identifier = models.SlugField(
-        max_length=256, unique=True,
+        max_length=128, unique=True,
         verbose_name=_('Identifier'),
         help_text=_('The unambiguous internal identifier of this task.')
     )
