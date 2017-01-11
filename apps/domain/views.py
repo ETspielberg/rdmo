@@ -57,7 +57,10 @@ def domain_export_csv(request):
 def domain_export_xml(request):
     queryset = AttributeEntity.objects.filter(is_attribute=False)
     serializer = ExportSerializer(queryset, many=True)
-    return HttpResponse(XMLRenderer().render(serializer.data), content_type="application/xml")
+
+    response = HttpResponse(XMLRenderer().render(serializer.data), content_type="application/xml")
+    response['Content-Disposition'] = 'attachment; filename="domain.xml"'
+    return response
 
 
 class AttributeEntityViewSet(viewsets.ModelViewSet):

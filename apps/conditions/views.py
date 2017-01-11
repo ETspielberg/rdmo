@@ -41,7 +41,10 @@ def conditions_export(request, format):
 def conditions_export_xml(request):
     queryset = Condition.objects.all()
     serializer = ExportSerializer(queryset, many=True)
-    return HttpResponse(XMLRenderer().render(serializer.data), content_type="application/xml")
+
+    response = HttpResponse(XMLRenderer().render(serializer.data), content_type="application/xml")
+    response['Content-Disposition'] = 'attachment; filename="conditions.xml"'
+    return response
 
 
 class ConditionViewSet(viewsets.ModelViewSet):
