@@ -20,17 +20,17 @@ class XMLRenderer(BaseRenderer):
 
         xml = SimplerXMLGenerator(stream, "utf-8")
         xml.startDocument()
-        xml.startElement('Conditions', {})
+        xml.startElement('conditions', {})
 
         for condition in data:
             self._condition(xml, condition)
 
-        xml.endElement('Conditions')
+        xml.endElement('conditions')
         xml.endDocument()
         return stream.getvalue()
 
     def _condition(self, xml, condition):
-        xml.startElement('Condition', {})
+        xml.startElement('condition', {})
         self._text_element(xml, 'identifier', {}, condition["identifier"])
         self._text_element(xml, 'uri', {}, condition["uri"])
         self._text_element(xml, 'comment', {}, condition["comment"])
@@ -38,7 +38,7 @@ class XMLRenderer(BaseRenderer):
         self._text_element(xml, 'relation', {}, condition["relation"])
         self._text_element(xml, 'target_text', {}, condition["target_text"])
         self._text_element(xml, 'target_option', {}, condition["target_option"])
-        xml.endElement('Condition')
+        xml.endElement('condition')
 
     def _text_element(self, xml, tag, condition, text):
         xml.startElement(tag, condition)
