@@ -37,7 +37,10 @@ def catalog_export(request, catalog_id, format):
 def questions_catalog_export_xml(request):
     queryset = Catalog.objects.all()
     serializer = ExportSerializer(queryset, many=True)
-    return HttpResponse(XMLRenderer().render(serializer.data), content_type="application/xml")
+
+    response = HttpResponse(XMLRenderer().render(serializer.data), content_type="application/xml")
+    response['Content-Disposition'] = 'attachment; filename="questions.xml"'
+    return response
 
 
 class CatalogViewSet(viewsets.ModelViewSet):

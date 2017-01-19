@@ -20,7 +20,7 @@ class XMLRenderer(BaseRenderer):
 
         xml = SimplerXMLGenerator(stream, "utf-8")
         xml.startDocument()
-        xml.startElement('Domain', {
+        xml.startElement('domain', {
             'xmlns:dc': "http://purl.org/dc/elements/1.1/"
         })
 
@@ -30,12 +30,12 @@ class XMLRenderer(BaseRenderer):
             else:
                 self._attribute_entity(xml, attribute_entity)
 
-        xml.endElement('Domain')
+        xml.endElement('domain')
         xml.endDocument()
         return stream.getvalue()
 
     def _attribute(self, xml, attribute):
-        xml.startElement('Attribute', {})
+        xml.startElement('attribute', {})
         self._text_element(xml, 'dc:identifier', {}, attribute["identifier"])
         self._text_element(xml, 'dc:uri', {}, attribute["uri"])
         self._text_element(xml, 'dc:comment', {}, attribute["comment"])
@@ -43,41 +43,53 @@ class XMLRenderer(BaseRenderer):
         self._text_element(xml, 'value_type', {}, attribute["value_type"])
         self._text_element(xml, 'unit', {}, attribute["unit"])
 
-        if 'optionsets' in attribute and attribute['optionsets']:
-            xml.startElement('OptionSets', {})
-
-            for optionset in attribute['optionsets']:
-                xml.startElement('OptionSet', optionset)
-                xml.endElement('OptionSet')
-
-            xml.endElement('OptionSets')
-
-        if 'conditions' in attribute and attribute['conditions']:
-            xml.startElement('Conditions', {})
-
-            for condition in attribute['conditions']:
-                xml.startElement('Condition', condition)
-                xml.endElement('Condition')
-
-            xml.endElement('Conditions')
-
         if 'range' in attribute and attribute['range']:
             self._range(xml, attribute['range'])
 
         if 'verbosename' in attribute and attribute['verbosename']:
             self._verbosename(xml, attribute['verbosename'])
 
-        xml.endElement('Attribute')
+        if 'optionsets' in attribute and attribute['optionsets']:
+            xml.startElement('optionsets', {})
+
+            for optionset in attribute['optionsets']:
+                xml.startElement('optionset', optionset)
+                xml.endElement('optionset')
+
+            xml.endElement('optionsets')
+
+        if 'conditions' in attribute and attribute['conditions']:
+            xml.startElement('conditions', {})
+
+            for condition in attribute['conditions']:
+                xml.startElement('condition', condition)
+                xml.endElement('condition')
+
+            xml.endElement('conditions')
+
+        xml.endElement('attribute')
 
     def _attribute_entity(self, xml, attribute_entity):
-        xml.startElement('AttributeEntity', {})
+        xml.startElement('entity', {})
         self._text_element(xml, 'dc:identifier', {}, attribute_entity["identifier"])
         self._text_element(xml, 'dc:uri', {}, attribute_entity["uri"])
         self._text_element(xml, 'dc:comment', {}, attribute_entity["comment"])
         self._text_element(xml, 'is_collection', {}, attribute_entity["is_collection"])
 
+        if 'verbosename' in attribute_entity and attribute_entity['verbosename']:
+            self._verbosename(xml, attribute_entity['verbosename'])
+
+        if 'conditions' in attribute_entity and attribute_entity['conditions']:
+            xml.startElement('conditions', {})
+
+            for condition in attribute_entity['conditions']:
+                xml.startElement('condition', condition)
+                xml.endElement('condition')
+
+            xml.endElement('conditions')
+
         if 'children' in attribute_entity:
-            xml.startElement('Children', {})
+            xml.startElement('children', {})
 
             for child in attribute_entity['children']:
                 if child['is_attribute']:
@@ -85,21 +97,9 @@ class XMLRenderer(BaseRenderer):
                 else:
                     self._attribute_entity(xml, child)
 
-            xml.endElement('Children')
+            xml.endElement('children')
 
-        if 'conditions' in attribute_entity and attribute_entity['conditions']:
-            xml.startElement('Conditions', {})
-
-            for condition in attribute_entity['conditions']:
-                xml.startElement('Condition', condition)
-                xml.endElement('Condition')
-
-            xml.endElement('Conditions')
-
-        if 'verbosename' in attribute_entity and attribute_entity['verbosename']:
-            self._verbosename(xml, attribute_entity['verbosename'])
-
-        xml.endElement('AttributeEntity')
+        xml.endElement('entity')
 
     def _range(self, xml, range):
         xml.startElement('range', {})

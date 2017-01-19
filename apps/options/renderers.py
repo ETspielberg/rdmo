@@ -20,17 +20,17 @@ class XMLRenderer(BaseRenderer):
 
         xml = SimplerXMLGenerator(stream, "utf-8")
         xml.startDocument()
-        xml.startElement('OptionSets', {})
+        xml.startElement('options', {})
 
         for optionset in data:
             self._optionset(xml, optionset)
 
-        xml.endElement('OptionSets')
+        xml.endElement('options')
         xml.endDocument()
         return stream.getvalue()
 
     def _option(self, xml, option):
-        xml.startElement('Option', {})
+        xml.startElement('option', {})
         self._text_element(xml, 'identifier', {}, option["identifier"])
         self._text_element(xml, 'uri', {}, option["uri"])
         self._text_element(xml, 'comment', {}, option["comment"])
@@ -38,37 +38,37 @@ class XMLRenderer(BaseRenderer):
         self._text_element(xml, 'text_en', {}, option["text_en"])
         self._text_element(xml, 'text_de', {}, option["text_de"])
         self._text_element(xml, 'additional_input', {}, option["additional_input"])
-        xml.endElement('Option')
+        xml.endElement('option')
 
     def _optionset(self, xml, optionset):
-        xml.startElement('OptionSet', {})
+        xml.startElement('optionset', {})
         self._text_element(xml, 'identifier', {}, optionset["identifier"])
         self._text_element(xml, 'uri', {}, optionset["uri"])
         self._text_element(xml, 'comment', {}, optionset["comment"])
         self._text_element(xml, 'order', {}, optionset["order"])
 
         if 'options' in optionset and optionset['options']:
-            xml.startElement('Options', {})
+            xml.startElement('options', {})
 
             for option in optionset['options']:
                 self._option(xml, option)
 
-            xml.endElement('Options')
+            xml.endElement('options')
 
         if 'conditions' in optionset and optionset['conditions']:
-            xml.startElement('Conditions', {})
+            xml.startElement('conditions', {})
 
             for condition in optionset['conditions']:
                 self._condition(xml, condition)
 
-            xml.endElement('Conditions')
+            xml.endElement('conditions')
 
-        xml.endElement('OptionSet')
+        xml.endElement('optionset')
 
     def _condition(self, xml, condition):
-        xml.startElement('Condition', {})
+        xml.startElement('condition', {})
         self._text_element(xml, 'identifier', {}, condition["identifier"])
-        xml.endElement('Condition')
+        xml.endElement('condition')
 
     def _text_element(self, xml, tag, option, text):
         xml.startElement(tag, option)

@@ -38,7 +38,10 @@ def options_export(request, format):
 def options_export_xml(request):
     queryset = OptionSet.objects.all()
     serializer = ExportSerializer(queryset, many=True)
-    return HttpResponse(XMLRenderer().render(serializer.data), content_type="application/xml")
+
+    response = HttpResponse(XMLRenderer().render(serializer.data), content_type="application/xml")
+    response['Content-Disposition'] = 'attachment; filename="options.xml"'
+    return response
 
 
 class OptionSetViewSet(viewsets.ModelViewSet):
