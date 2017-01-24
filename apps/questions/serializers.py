@@ -9,37 +9,20 @@ from apps.domain.models import AttributeEntity, Attribute
 from .models import *
 
 
-class CatalogIndexSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = Catalog
-        fields = (
-            'id',
-            'label',
-        )
-
-
 class CatalogSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Catalog
         fields = (
             'id',
+            'identifier',
+            'uri',
+            'comment',
             'order',
             'title',
             'title_en',
             'title_de',
             'title'
-        )
-
-
-class SectionIndexSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = Section
-        fields = (
-            'id',
-            'label',
         )
 
 
@@ -49,21 +32,14 @@ class SectionSerializer(serializers.ModelSerializer):
         model = Section
         fields = (
             'id',
+            'identifier',
+            'uri',
+            'comment',
             'catalog',
             'order',
             'title',
             'title_en',
             'title_de'
-        )
-
-
-class SubsectionIndexSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = Subsection
-        fields = (
-            'id',
-            'label',
         )
 
 
@@ -74,20 +50,13 @@ class SubsectionSerializer(serializers.ModelSerializer):
         fields = (
             'id',
             'section',
+            'identifier',
+            'uri',
+            'comment',
             'order',
             'title',
             'title_en',
             'title_de',
-        )
-
-
-class QuestionSetIndexSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = QuestionEntity
-        fields = (
-            'id',
-            'label'
         )
 
 
@@ -99,6 +68,9 @@ class QuestionSetSerializer(serializers.ModelSerializer):
             'id',
             'subsection',
             'attribute_entity',
+            'identifier',
+            'uri',
+            'comment',
             'order',
             'help_en',
             'help_de',
@@ -114,6 +86,9 @@ class QuestionSerializer(serializers.ModelSerializer):
             'subsection',
             'parent',
             'attribute_entity',
+            'identifier',
+            'uri',
+            'comment',
             'order',
             'help_en',
             'help_de',
@@ -143,6 +118,46 @@ class AttributeSerializer(serializers.ModelSerializer):
         )
 
 
+class CatalogIndexSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Catalog
+        fields = (
+            'id',
+            'label',
+        )
+
+
+class SectionIndexSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Section
+        fields = (
+            'id',
+            'label',
+        )
+
+
+class SubsectionIndexSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Subsection
+        fields = (
+            'id',
+            'label',
+        )
+
+
+class QuestionSetIndexSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = QuestionEntity
+        fields = (
+            'id',
+            'label'
+        )
+
+
 class CatalogAttributeEntityNestedSerializer(serializers.ModelSerializer):
 
     class Meta:
@@ -163,6 +178,7 @@ class CatalogQuestionNestedSerializer(serializers.ModelSerializer):
         model = Question
         fields = (
             'id',
+            'identifier',
             'text',
             'attribute_entity',
             'warning'
@@ -188,6 +204,7 @@ class CatalogQuestionEntityNestedSerializer(serializers.ModelSerializer):
         model = QuestionEntity
         fields = (
             'id',
+            'identifier',
             'subsection',
             'text',
             'is_set',
@@ -224,6 +241,7 @@ class CatalogSubsectionNestedSerializer(serializers.ModelSerializer):
         model = Subsection
         fields = (
             'id',
+            'identifier',
             'title',
             'entities'
         )
@@ -242,6 +260,7 @@ class CatalogSectionNestedSerializer(serializers.ModelSerializer):
         model = Section
         fields = (
             'id',
+            'identifier',
             'title',
             'subsections'
         )
@@ -257,6 +276,7 @@ class CatalogNestedSerializer(serializers.ModelSerializer):
         model = Catalog
         fields = (
             'id',
+            'identifier',
             'title',
             'title_en',
             'title_de',
@@ -276,7 +296,7 @@ class ExportAttributeEntitySerializer(serializers.ModelSerializer):
     class Meta:
         model = AttributeEntity
         fields = (
-            'id',
+            'identifier',
             'label'
         )
 
@@ -290,6 +310,9 @@ class ExportQuestionSerializer(serializers.ModelSerializer):
         fields = (
             'parent',
             'attribute_entity',
+            'identifier',
+            'uri',
+            'comment',
             'order',
             'help_en',
             'help_de',
@@ -304,12 +327,16 @@ class ExportQuestionEntitySerializer(serializers.ModelSerializer):
     questions = ExportQuestionSerializer(many=True, read_only=True)
     text_en = serializers.CharField(source='question.text_en')
     text_de = serializers.CharField(source='question.text_de')
+    widget_type = serializers.CharField(source='question.widget_type')
 
     attribute_entity = ExportAttributeEntitySerializer(read_only=True)
 
     class Meta:
         model = QuestionEntity
         fields = (
+            'identifier',
+            'uri',
+            'comment',
             'text_en',
             'text_de',
             'is_set',
@@ -317,6 +344,7 @@ class ExportQuestionEntitySerializer(serializers.ModelSerializer):
             'order',
             'help_en',
             'help_de',
+            'widget_type',
             'questions'
         )
 
@@ -328,6 +356,9 @@ class ExportSubsectionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Subsection
         fields = (
+            'identifier',
+            'uri',
+            'comment',
             'order',
             'title_en',
             'title_de',
@@ -347,6 +378,9 @@ class ExportSectionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Catalog
         fields = (
+            'identifier',
+            'uri',
+            'comment',
             'order',
             'title',
             'title_en',
@@ -362,6 +396,9 @@ class ExportSerializer(serializers.ModelSerializer):
     class Meta:
         model = Catalog
         fields = (
+            'identifier',
+            'uri',
+            'comment',
             'order',
             'title',
             'title_en',

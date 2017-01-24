@@ -14,10 +14,36 @@ from .managers import QuestionEntityManager
 @python_2_unicode_compatible
 class Catalog(Model, TranslationMixin):
 
-    order = models.IntegerField(null=True)
-
-    title_en = models.CharField(max_length=256)
-    title_de = models.CharField(max_length=256)
+    identifier = models.SlugField(
+        max_length=128, unique=True,
+        verbose_name=_('Identifier'),
+        help_text=_('The unambiguous internal identifier of this catalog.')
+    )
+    uri = models.URLField(
+        max_length=256, blank=True, null=True,
+        verbose_name=_('URI'),
+        help_text=_('The Uniform Resource Identifier of this catalog.')
+    )
+    comment = models.TextField(
+        blank=True, null=True,
+        verbose_name=_('Comment'),
+        help_text=_('Additional information about this catalog.')
+    )
+    order = models.IntegerField(
+        default=0,
+        verbose_name=_('Order'),
+        help_text=_('The position of this catalog in lists.')
+    )
+    title_en = models.CharField(
+        max_length=256,
+        verbose_name=_('Title (en)'),
+        help_text=_('The English title for this catalog.')
+    )
+    title_de = models.CharField(
+        max_length=256,
+        verbose_name=_('Title (de)'),
+        help_text=_('The German title for this catalog.')
+    )
 
     class Meta:
         ordering = ('order',)
@@ -48,17 +74,53 @@ post_save.connect(post_save_catalog, sender=Catalog)
 @python_2_unicode_compatible
 class Section(Model, TranslationMixin):
 
-    catalog = models.ForeignKey(Catalog, related_name='sections')
-    order = models.IntegerField(null=True)
-
-    title_en = models.CharField(max_length=256)
-    title_de = models.CharField(max_length=256)
-
-    label_de = models.TextField()
-    label_en = models.TextField()
+    catalog = models.ForeignKey(
+        Catalog, related_name='sections',
+        verbose_name=_('Catalog'),
+        help_text=_('The catalog this section belongs to.')
+    )
+    identifier = models.SlugField(
+        max_length=128, db_index=True,
+        verbose_name=_('Identifier'),
+        help_text=_('The unambiguous internal identifier of this section.')
+    )
+    uri = models.URLField(
+        max_length=256, blank=True, null=True,
+        verbose_name=_('URI'),
+        help_text=_('The Uniform Resource Identifier of this section.')
+    )
+    comment = models.TextField(
+        blank=True, null=True,
+        verbose_name=_('Comment'),
+        help_text=_('Additional information about this section.')
+    )
+    order = models.IntegerField(
+        default=0,
+        verbose_name=_('Order'),
+        help_text=_('The position of this section in lists.')
+    )
+    title_en = models.CharField(
+        max_length=256,
+        verbose_name=_('Title (en)'),
+        help_text=_('The English title for this section.')
+    )
+    title_de = models.CharField(
+        max_length=256,
+        verbose_name=_('Title (de)'),
+        help_text=_('The German title for this section.')
+    )
+    label_en = models.TextField(
+        verbose_name=_('Label (en)'),
+        help_text=_('The English label for this section (auto-generated).')
+    )
+    label_de = models.TextField(
+        verbose_name=_('Label (de)'),
+        help_text=_('The German label for this section (auto-generated).')
+    )
 
     class Meta:
         ordering = ('catalog__order', 'order')
+        unique_together = ('catalog', 'identifier')
         verbose_name = _('Section')
         verbose_name_plural = _('Sections')
 
@@ -92,17 +154,53 @@ post_save.connect(post_save_section, sender=Section)
 @python_2_unicode_compatible
 class Subsection(Model, TranslationMixin):
 
-    section = models.ForeignKey(Section, related_name='subsections')
-    order = models.IntegerField(null=True)
-
-    title_en = models.CharField(max_length=256)
-    title_de = models.CharField(max_length=256)
-
-    label_de = models.TextField()
-    label_en = models.TextField()
+    section = models.ForeignKey(
+        Section, related_name='subsections',
+        verbose_name=_('Catalog'),
+        help_text=_('The section this subsection belongs to.')
+    )
+    identifier = models.SlugField(
+        max_length=128, db_index=True,
+        verbose_name=_('Identifier'),
+        help_text=_('The unambiguous internal identifier of this subsection.')
+    )
+    uri = models.URLField(
+        max_length=256, blank=True, null=True,
+        verbose_name=_('URI'),
+        help_text=_('The Uniform Resource Identifier of this subsection.')
+    )
+    comment = models.TextField(
+        blank=True, null=True,
+        verbose_name=_('Comment'),
+        help_text=_('Additional information about this subsection.')
+    )
+    order = models.IntegerField(
+        default=0,
+        verbose_name=_('Order'),
+        help_text=_('The position of this subsection in lists.')
+    )
+    title_en = models.CharField(
+        max_length=256,
+        verbose_name=_('Title (en)'),
+        help_text=_('The English title for this subsection.')
+    )
+    title_de = models.CharField(
+        max_length=256,
+        verbose_name=_('Title (de)'),
+        help_text=_('The German title for this subsection.')
+    )
+    label_en = models.TextField(
+        verbose_name=_('Label (en)'),
+        help_text=_('The English label for this subsection (auto-generated).')
+    )
+    label_de = models.TextField(
+        verbose_name=_('Label (de)'),
+        help_text=_('The German label for this subsection (auto-generated).')
+    )
 
     class Meta:
         ordering = ('section__catalog__order', 'section__order', 'order')
+        unique_together = ('section', 'identifier')
         verbose_name = _('Subsection')
         verbose_name_plural = _('Subsections')
 
@@ -138,16 +236,54 @@ class QuestionEntity(Model, TranslationMixin):
 
     objects = QuestionEntityManager()
 
-    attribute_entity = models.ForeignKey(AttributeEntity, blank=True, null=True, on_delete=models.SET_NULL, related_name='+')
-
-    subsection = models.ForeignKey('Subsection', related_name='entities')
-    order = models.IntegerField(null=True)
-
-    label_de = models.TextField()
-    label_en = models.TextField()
-
-    help_en = models.TextField(null=True, blank=True)
-    help_de = models.TextField(null=True, blank=True)
+    attribute_entity = models.ForeignKey(
+        AttributeEntity, blank=True, null=True, on_delete=models.SET_NULL, related_name='+',
+        verbose_name=_('Attribute entity'),
+        help_text=_('The attribute/entity this question belongs to.')
+    )
+    subsection = models.ForeignKey(
+        Subsection, related_name='entities',
+        verbose_name=_('Catalog'),
+        help_text=_('The section this question belongs to.')
+    )
+    identifier = models.SlugField(
+        max_length=128, db_index=True,
+        verbose_name=_('Identifier'),
+        help_text=_('The unambiguous internal identifier of this question/questionset.')
+    )
+    uri = models.URLField(
+        max_length=256, blank=True, null=True,
+        verbose_name=_('URI'),
+        help_text=_('The Uniform Resource Identifier of this question/questionset.')
+    )
+    comment = models.TextField(
+        blank=True, null=True,
+        verbose_name=_('Comment'),
+        help_text=_('Additional information about this question/questionset.')
+    )
+    order = models.IntegerField(
+        default=0,
+        verbose_name=_('Order'),
+        help_text=_('The position of this subsection in lists.')
+    )
+    label_en = models.TextField(
+        verbose_name=_('Label (en)'),
+        help_text=_('The English label for this question/questionset (auto-generated).')
+    )
+    label_de = models.TextField(
+        verbose_name=_('Label (de)'),
+        help_text=_('The German label for this question/questionset (auto-generated).')
+    )
+    help_en = models.TextField(
+        null=True, blank=True,
+        verbose_name=_('Help (en)'),
+        help_text=_('The English help text for this question/questionset.')
+    )
+    help_de = models.TextField(
+        null=True, blank=True,
+        verbose_name=_('Help (de)'),
+        help_text=_('The German help text for this question/questionset.')
+    )
 
     class Meta:
         ordering = ('subsection__section__catalog__order', 'subsection__section__order', 'subsection__order', 'order')
@@ -208,12 +344,24 @@ class Question(QuestionEntity):
         ('date', 'Date picker'),
     )
 
-    parent = models.ForeignKey('QuestionEntity', blank=True, null=True, related_name='questions')
-
-    text_en = models.TextField()
-    text_de = models.TextField()
-
-    widget_type = models.CharField(max_length=12, choices=WIDGET_TYPE_CHOICES)
+    parent = models.ForeignKey(
+        QuestionEntity, blank=True, null=True, related_name='questions',
+        verbose_name=_('Parent'),
+        help_text=_('The question set this question belongs to.')
+    )
+    text_en = models.TextField(
+        verbose_name=_('Text (en)'),
+        help_text=_('The English text for this question.')
+    )
+    text_de = models.TextField(
+        verbose_name=_('Text (de)'),
+        help_text=_('The German text for this question.')
+    )
+    widget_type = models.CharField(
+        max_length=12, choices=WIDGET_TYPE_CHOICES,
+        verbose_name=_('Widget type'),
+        help_text=_('Type of widget for this question.')
+    )
 
     class Meta:
         verbose_name = _('Question')

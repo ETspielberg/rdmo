@@ -1,4 +1,7 @@
-from .models import *
+from apps.conditions.models import Condition
+from apps.options.models import OptionSet
+
+from .models import AttributeEntity, Attribute, Range, VerboseName
 
 
 def import_xml(domain_node):
@@ -107,7 +110,7 @@ def _import_attribute_entity(entity_node, nsmap, parent=None):
         for condition_node in entity_node.conditions.iterchildren():
             try:
                 condition = Condition.objects.get(identifier=condition_node.get('identifier'))
-                attribute.conditions.add(condition)
+                entity.conditions.add(condition)
             except Condition.DoesNotExist:
                 pass
 

@@ -39,6 +39,7 @@
                 </div>
                 <strong>{% trans 'Section' %}</strong>
                 <span>{$ section.title $}</span>
+                <code>{$ section.identifier $}</code>
             </div>
         </div>
 
@@ -51,6 +52,7 @@
                     </div>
                     <strong>{% trans 'Subsection' %}</strong>
                     <span>{$ subsection.title $}</span>
+                    <code>{$ subsection.identifier $}</code>
                 </div>
             </div>
 
@@ -64,6 +66,7 @@
                             {% include 'questions/catalogs_options_questionsets.html' %}
                         </div>
                         <strong>{% trans 'Question set' %}</strong>
+                        <code>{$ question.identifier $}</code>
                         <em ng-show="questionset.is_collection">collection</em>
                         <span class="fa fa-warning text-danger" title="{$ entity.warning $}"
                             ng-show="entity.warning"></span>
@@ -76,6 +79,7 @@
                                 {% include 'questions/catalogs_options_questions.html' %}
                             </div>
                             <span>{$ question.text $}</span>
+                            <code>{$ question.identifier $}</code>
                             <em ng-show="question.is_collection">collection</em>
                             <span class="fa fa-warning text-danger" title="{$ question.warning $}"
                                 ng-show="question.warning" ></span>
@@ -97,6 +101,7 @@
                                 {% include 'questions/catalogs_options_questions.html' %}
                             </div>
                             <span>{$ question.text $}</span>
+                            <code>{$ question.identifier $}</code>
                             <em ng-show="question.is_collection">collection</em>
                             <span class="fa fa-warning text-danger" title="{$ question.warning $}"
                                 ng-show="question.warning"></span>
