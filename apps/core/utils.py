@@ -14,6 +14,7 @@ from django.utils.translation import ugettext_lazy as _
 from apps.conditions.utils import import_xml as import_conditions
 from apps.options.utils import import_xml as import_options
 from apps.domain.utils import import_xml as import_domain
+from apps.questions.utils import import_xml as import_questions
 
 
 def get_script_alias(request):
@@ -119,6 +120,9 @@ def import_xml(xml_string):
 
     elif xml_root.tag == 'domain':
         import_domain(xml_root)
+
+    elif xml_root.tag == 'catalogs':
+        import_questions(xml_root)
 
     else:
         raise Exception('This is not a proper RDMO XML Export.')

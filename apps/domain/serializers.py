@@ -177,7 +177,7 @@ class ExportSerializer(serializers.ModelSerializer):
     range = ExportRangeSerializer(source='attribute.range', read_only=True)
     verbosename = ExportVerboseNameSerializer(read_only=True)
 
-    optionsets = ExportOptionSetSerializer(read_only=True, many=True)
+    optionsets = ExportOptionSetSerializer(source='attribute.optionsets', read_only=True, many=True)
     conditions = ExportConditionSerializer(read_only=True, many=True)
     children = serializers.SerializerMethodField()
 
